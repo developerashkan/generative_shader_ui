@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -20,7 +21,7 @@ class SiriWave extends StatefulWidget {
     super.key,
     this.width,
     this.height = 120,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.amplitude,
     this.speed = 1.0,
     this.thickness = 2.0,
@@ -36,7 +37,9 @@ class SiriWave extends StatefulWidget {
   final double height;
 
   /// One color per wave.
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Audio level from 0 to 1; idles softly when null.
   final double? amplitude;
@@ -66,7 +69,8 @@ class _SiriWaveState extends ShaderWidgetState<SiriWave> {
   @override
   ShaderEffect get effect => ShaderEffect.siriWave;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.siri);
   @override
   double get speed => widget.speed;
   @override

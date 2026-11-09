@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:generative_shader_ui/generative_shader_ui.dart';
 
+import 'motion_sections.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Optional: warm up every shader so the first frame is already GPU-rendered.
@@ -86,6 +88,12 @@ class _GalleryPageState extends State<GalleryPage> {
       'buttons': _buttonsSection(),
       'progress': _progressSection(),
       'containers': _containersSection(),
+      'skeleton': const SkeletonDemo(),
+      'glass': const GlassDemo(),
+      'particles': const ParticlesDemo(),
+      // ShaderTheme: every widget below without its own palette follows the
+      // palette chips.
+      'motion': ShaderTheme(palette: _palette, child: const MotionDemo()),
     };
 
     final String? scene = widget.scene;
@@ -103,6 +111,13 @@ class _GalleryPageState extends State<GalleryPage> {
               _Card(title: 'NeonButton', child: sections['buttons']!),
               _Card(title: 'Progress', child: sections['progress']!),
               _Card(title: 'Containers', child: sections['containers']!),
+              _Card(title: 'ShaderSkeleton', child: sections['skeleton']!),
+              _Card(
+                title: 'LiquidGlass',
+                child: SizedBox(height: 420, child: sections['glass']!),
+              ),
+              _Card(title: 'ParticleField', child: sections['particles']!),
+              _Card(title: 'Motion', child: sections['motion']!),
             ];
             return ListView(
               padding: const EdgeInsets.all(20),
@@ -129,8 +144,22 @@ class _GalleryPageState extends State<GalleryPage> {
                       const SizedBox(width: 16),
                       Expanded(child: cards[3]),
                     ],
-                  )
-                else
+                  ),
+                if (wide) ...<Widget>[
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(child: cards[4]),
+                      const SizedBox(width: 16),
+                      Expanded(child: cards[5]),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  cards[6],
+                  const SizedBox(height: 16),
+                  cards[7],
+                ] else
                   for (final Widget card in cards) ...<Widget>[
                     card,
                     const SizedBox(height: 16),
@@ -183,6 +212,26 @@ class _GalleryPageState extends State<GalleryPage> {
               SizedBox(height: 200, child: sections['containers']!),
             ],
           ),
+        );
+      case 'skeleton':
+        return Center(
+          child: SizedBox(width: 460, child: sections['skeleton']!),
+        );
+      case 'glass':
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: sections['glass']!,
+        );
+      case 'particles':
+        return const Center(
+          child: SizedBox(
+            width: 860,
+            child: ParticlesDemo(tileWidth: 200, tileHeight: 170),
+          ),
+        );
+      case 'motion':
+        return Center(
+          child: SizedBox(width: 900, child: sections['motion']!),
         );
       default:
         return sections[scene] ?? const SizedBox();

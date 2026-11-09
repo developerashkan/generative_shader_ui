@@ -2,9 +2,11 @@
 
 Gallery app showing every widget of
 [generative_shader_ui](https://pub.dev/packages/generative_shader_ui):
-Siri orb and waves with a simulated voice, neon buttons, mesh gradients,
-aurora, gradient text and shader progress indicators. Tap the palette chips to
-watch every widget cross-fade to a new theme.
+the auto-generated skeleton loader, liquid glass, all particle styles, pulse,
+ripple, liquid gauge, reveal transitions and shimmer, Siri orb and waves with
+a simulated voice, neon buttons, mesh gradients, aurora, gradient text and
+shader progress indicators. Tap the palette chips to watch widgets cross-fade
+to a new theme.
 
 ```bash
 flutter run -d chrome   # or windows, macos, linux, android, ios
@@ -26,6 +28,7 @@ void main() => runApp(
               children: [
                 const SiriOrb(),
                 NeonButton(onPressed: () {}, child: const Text('Boom')),
+                const ShaderSkeleton(child: Text('Loading text')),
               ],
             ),
           ),

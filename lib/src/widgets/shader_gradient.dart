@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -24,7 +25,7 @@ class ShaderGradient extends StatefulWidget {
   /// Creates an animated mesh gradient container.
   const ShaderGradient({
     super.key,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.speed = 1.0,
     this.warp = 1.0,
     this.scale = 1.6,
@@ -40,7 +41,9 @@ class ShaderGradient extends StatefulWidget {
   });
 
   /// Colors of the four drifting gradient points.
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Animation speed multiplier; 0 freezes the gradient.
   final double speed;
@@ -86,7 +89,8 @@ class _ShaderGradientState extends ShaderWidgetState<ShaderGradient> {
   @override
   ShaderEffect get effect => ShaderEffect.meshGradient;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.siri);
   @override
   double get speed => widget.speed;
   @override

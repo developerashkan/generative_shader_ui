@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import 'neon_container.dart';
 
 /// A glowing neon button rendered by a GPU shader.
@@ -24,7 +25,7 @@ class NeonButton extends StatefulWidget {
     required this.onPressed,
     required this.child,
     this.onLongPress,
-    this.palette = ShaderPalette.neon,
+    this.palette,
     this.borderRadius = 16,
     this.strokeWidth = 2,
     this.glow = 14,
@@ -47,7 +48,9 @@ class NeonButton extends StatefulWidget {
   final Widget child;
 
   /// Neon sweep colors.
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.neon].
+  final ShaderPalette? palette;
 
   /// Corner radius in logical pixels.
   final double borderRadius;

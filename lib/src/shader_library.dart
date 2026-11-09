@@ -22,7 +22,31 @@ enum ShaderEffect {
   linearProgress('linear_progress'),
 
   /// Northern lights background.
-  aurora('aurora');
+  aurora('aurora'),
+
+  /// Skeleton loader fill (shimmer, pulse, glow).
+  skeleton('skeleton'),
+
+  /// Glossy shine sweeping over a child.
+  shimmer('shimmer'),
+
+  /// Liquid glass surface highlights.
+  glass('glass'),
+
+  /// Procedural particle field (snow, embers, fireflies, ...).
+  particles('particles'),
+
+  /// Glowing touch ripples.
+  ripple('ripple'),
+
+  /// Radar pulse rings.
+  pulse('pulse'),
+
+  /// Layered liquid waves.
+  liquidWaves('liquid_waves'),
+
+  /// Reveal transition mask and edge glow.
+  reveal('reveal');
 
   const ShaderEffect(this.fileName);
 

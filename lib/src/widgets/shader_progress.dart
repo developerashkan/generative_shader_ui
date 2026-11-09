@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -31,7 +32,7 @@ class ShaderCircularProgressIndicator extends StatefulWidget {
     this.value,
     this.size = 64,
     this.strokeWidth = 6,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.glow = 10,
     this.trackColor = const Color(0x1FFFFFFF),
     this.speed = 1.0,
@@ -49,7 +50,9 @@ class ShaderCircularProgressIndicator extends StatefulWidget {
   final double strokeWidth;
 
   /// Arc gradient from start (color 1) to end (color 4).
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Glow spread in logical pixels (painted outside the bounds).
   final double glow;
@@ -84,7 +87,8 @@ class _ShaderCircularProgressIndicatorState
   @override
   ShaderEffect get effect => ShaderEffect.circularProgress;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.siri);
   @override
   double get speed => widget.speed;
   @override
@@ -195,7 +199,7 @@ class ShaderLinearProgressIndicator extends StatefulWidget {
     this.value,
     this.minHeight = 8,
     this.borderRadius,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.glow = 10,
     this.trackColor = const Color(0x1FFFFFFF),
     this.speed = 1.0,
@@ -212,7 +216,9 @@ class ShaderLinearProgressIndicator extends StatefulWidget {
   final double? borderRadius;
 
   /// Colors flowing through the bar.
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Glow spread in logical pixels (painted outside the bounds).
   final double glow;
@@ -244,7 +250,8 @@ class _ShaderLinearProgressIndicatorState
   @override
   ShaderEffect get effect => ShaderEffect.linearProgress;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.siri);
   @override
   double get speed => widget.speed;
   @override

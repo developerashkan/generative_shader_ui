@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -22,7 +23,7 @@ class NeonContainer extends StatefulWidget {
   /// Creates a neon-bordered container.
   const NeonContainer({
     super.key,
-    this.palette = ShaderPalette.neon,
+    this.palette,
     this.borderRadius = 16,
     this.strokeWidth = 2,
     this.glow = 14,
@@ -39,7 +40,9 @@ class NeonContainer extends StatefulWidget {
   });
 
   /// Border sweep colors (all four cycle around the border).
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.neon].
+  final ShaderPalette? palette;
 
   /// Corner radius in logical pixels.
   final double borderRadius;
@@ -92,7 +95,8 @@ class _NeonContainerState extends ShaderWidgetState<NeonContainer> {
   @override
   ShaderEffect get effect => ShaderEffect.neonBorder;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.neon);
   @override
   double get speed => widget.speed;
   @override

@@ -1,9 +1,8 @@
 name: generative_shader_ui
 description: >-
-  Drop-in GPU shader widgets: Siri-style fluid orb and voice waves, neon
-  buttons, animated mesh gradients, aurora and glowing progress indicators.
-  No GLSL needed.
-version: 1.0.0
+  GPU shader widgets: auto skeleton loader, liquid glass, particles, Siri orb
+  and waves, neon buttons, ripples, reveal transitions. No GLSL needed.
+version: 1.1.0
 homepage: https://github.com/developerashkan/generative_shader_ui
 repository: https://github.com/developerashkan/generative_shader_ui
 issue_tracker: https://github.com/developerashkan/generative_shader_ui/issues
@@ -12,16 +11,24 @@ documentation: https://github.com/developerashkan/generative_shader_ui#readme
 topics:
   - shaders
   - animation
-  - gradient
-  - ui
-  - widget
+  - skeleton
+  - shimmer
+  - glassmorphism
 
 screenshots:
-  - description: Gallery of generative_shader_ui widgets - Siri orb, waves, neon buttons, mesh gradients and glowing progress.
+  - description: Gallery of generative_shader_ui GPU shader widgets - Siri orb, neon buttons, progress, auto skeleton loader and liquid glass.
     path: doc/screenshots/gallery.png
+  - description: ShaderSkeleton generates shimmering skeleton bones from your real layout, then cross-fades to the content.
+    path: doc/screenshots/skeleton.gif
+  - description: LiquidGlass panels with blurred, saturated backdrop, rim light and iridescent edges over a living gradient.
+    path: doc/screenshots/glass.png
+  - description: Motion widgets - ShaderPulse rings, LiquidWaves gauge, ShaderRipple, ShaderReveal transitions and ShaderShimmer.
+    path: doc/screenshots/motion.gif
+  - description: ParticleField styles - snow, embers, fireflies, bokeh, rain, confetti and warp - plus LiquidWaves.
+    path: doc/screenshots/particles.png
   - description: Siri-style fluid orb and voice waves reacting to live audio amplitude.
     path: doc/screenshots/siri.gif
-  - description: Animated neon buttons, neon containers and shader progress indicators.
+  - description: Animated neon buttons and shader progress indicators.
     path: doc/screenshots/controls.png
   - description: Aurora background with animated mesh gradient text and cards.
     path: doc/screenshots/aurora.png
@@ -48,3 +55,11 @@ flutter:
     - shaders/circular_progress.frag
     - shaders/linear_progress.frag
     - shaders/aurora.frag
+    - shaders/skeleton.frag
+    - shaders/shimmer.frag
+    - shaders/glass.frag
+    - shaders/particles.frag
+    - shaders/ripple.frag
+    - shaders/pulse.frag
+    - shaders/liquid_waves.frag
+    - shaders/reveal.frag

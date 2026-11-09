@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -28,7 +29,7 @@ class SiriOrb extends StatefulWidget {
   const SiriOrb({
     super.key,
     this.size = 200,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.amplitude,
     this.speed = 1.0,
     this.glow = 1.0,
@@ -41,7 +42,9 @@ class SiriOrb extends StatefulWidget {
   final double size;
 
   /// Blob colors (1-3) and core color (4).
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Audio level from 0 (silent) to 1 (loud). Values up to 1.5 overdrive it.
   ///
@@ -74,7 +77,8 @@ class _SiriOrbState extends ShaderWidgetState<SiriOrb> {
   @override
   ShaderEffect get effect => ShaderEffect.siriOrb;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.siri);
   @override
   double get speed => widget.speed;
   @override

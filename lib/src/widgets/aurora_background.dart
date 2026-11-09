@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -23,7 +24,7 @@ class AuroraBackground extends StatefulWidget {
   /// Creates an animated aurora background.
   const AuroraBackground({
     super.key,
-    this.palette = ShaderPalette.aurora,
+    this.palette,
     this.baseColor = const Color(0xFF050816),
     this.speed = 1.0,
     this.stars = 1.0,
@@ -38,7 +39,9 @@ class AuroraBackground extends StatefulWidget {
   });
 
   /// Curtain colors (1-3) and horizon glow (4).
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.aurora].
+  final ShaderPalette? palette;
 
   /// Sky color behind the aurora.
   final Color baseColor;
@@ -81,7 +84,8 @@ class _AuroraBackgroundState extends ShaderWidgetState<AuroraBackground> {
   @override
   ShaderEffect get effect => ShaderEffect.aurora;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.aurora);
   @override
   double get speed => widget.speed;
   @override

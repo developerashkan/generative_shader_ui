@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 
 import '../palette.dart';
+import '../shader_theme.dart';
 import '../shader_library.dart';
 import '../shader_state.dart';
 
@@ -21,7 +22,7 @@ class ShaderGradientMask extends StatefulWidget {
   const ShaderGradientMask({
     super.key,
     required this.child,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.speed = 1.0,
     this.warp = 1.0,
     this.scale = 1.4,
@@ -40,7 +41,9 @@ class ShaderGradientMask extends StatefulWidget {
   final Widget child;
 
   /// Gradient colors.
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Animation speed multiplier.
   final double speed;
@@ -66,7 +69,8 @@ class _ShaderGradientMaskState extends ShaderWidgetState<ShaderGradientMask> {
   @override
   ShaderEffect get effect => ShaderEffect.meshGradient;
   @override
-  ShaderPalette get palette => widget.palette;
+  ShaderPalette get palette =>
+      resolvePalette(widget.palette, ShaderPalette.siri);
   @override
   double get speed => widget.speed;
   @override
@@ -134,7 +138,7 @@ class ShaderGradientText extends StatelessWidget {
     this.text, {
     super.key,
     this.style,
-    this.palette = ShaderPalette.siri,
+    this.palette,
     this.speed = 1.0,
     this.textAlign,
     this.maxLines,
@@ -148,7 +152,9 @@ class ShaderGradientText extends StatelessWidget {
   final TextStyle? style;
 
   /// Gradient colors.
-  final ShaderPalette palette;
+  ///
+  /// Defaults to the nearest [ShaderTheme] palette, or [ShaderPalette.siri].
+  final ShaderPalette? palette;
 
   /// Animation speed multiplier.
   final double speed;

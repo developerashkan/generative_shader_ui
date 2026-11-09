@@ -184,6 +184,22 @@ class ShaderPalette {
     Color(0xFFB69AFF),
   );
 
+  /// Icy whites and pale blues; the default for snow particles.
+  static const ShaderPalette frost = ShaderPalette(
+    Color(0xFFFFFFFF),
+    Color(0xFFD6ECFF),
+    Color(0xFFA5D8FF),
+    Color(0xFF1C2A4A),
+  );
+
+  /// Warm firefly yellows and greens on a forest night.
+  static const ShaderPalette firefly = ShaderPalette(
+    Color(0xFFFFF27A),
+    Color(0xFFB8FF5C),
+    Color(0xFFFFC94D),
+    Color(0xFF0E2A1F),
+  );
+
   /// All built-in presets by name, handy for pickers and demos.
   static const Map<String, ShaderPalette> presets = <String, ShaderPalette>{
     'siri': siri,
@@ -195,6 +211,8 @@ class ShaderPalette {
     'lava': lava,
     'mint': mint,
     'candy': candy,
+    'frost': frost,
+    'firefly': firefly,
   };
 
   @override

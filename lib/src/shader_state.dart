@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 
 import 'palette.dart';
 import 'shader_library.dart';
+import 'shader_theme.dart';
 
 /// Writes uniforms into a [ui.FragmentShader] in declaration order.
 class UniformWriter {
@@ -73,7 +74,7 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
   /// Which fragment program to render.
   ShaderEffect get effect;
 
-  /// The palette requested by the widget.
+  /// The palette to render, usually `resolvePalette(widget.palette, ...)`.
   ShaderPalette get palette;
 
   /// Time multiplier requested by the widget.
@@ -112,6 +113,9 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
   Duration _lastElapsed = Duration.zero;
   late double _time;
   bool _reduceMotion = false;
+  ShaderTheme? _theme;
+  bool _paletteReady = false;
+  double _sinceRepaint = 0;
 
   late ShaderPalette _fromPalette;
   late ShaderPalette _toPalette;
@@ -140,15 +144,23 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
   /// Smoothed pointer strength: 1 pressed, ~0.45 hovering, 0 idle.
   double get touchStrength => _touchStrength;
 
-  /// Whether motion is currently allowed (respects platform reduce motion).
-  bool get motionEnabled => animate && !_reduceMotion;
+  /// Whether motion is currently allowed (respects platform reduce motion
+  /// and [ShaderTheme.animate]).
+  bool get motionEnabled =>
+      animate && (_theme?.animate ?? true) && !_reduceMotion;
+
+  /// Whether the platform asked for reduced motion.
+  bool get reduceMotion => _reduceMotion;
+
+  /// Returns [own] if set, otherwise the [ShaderTheme] palette, otherwise
+  /// [fallback].
+  ShaderPalette resolvePalette(ShaderPalette? own, ShaderPalette fallback) =>
+      own ?? _theme?.palette ?? fallback;
 
   @override
   void initState() {
     super.initState();
     _time = (identityHashCode(this) % 997) / 7.0;
-    _fromPalette = palette;
-    _toPalette = palette;
     _ticker = createTicker(_onTick);
     final ui.FragmentProgram? program = ShaderLibrary.cached(effect);
     if (program != null) {
@@ -177,19 +189,29 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    _theme = ShaderTheme.maybeOf(context);
+    _syncPalette();
     wake();
   }
 
   @override
   void didUpdateWidget(covariant T oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _syncPalette();
+    wake();
+  }
+
+  void _syncPalette() {
     final ShaderPalette next = palette;
-    if (next != _toPalette) {
+    if (!_paletteReady) {
+      _fromPalette = next;
+      _toPalette = next;
+      _paletteReady = true;
+    } else if (next != _toPalette) {
       _fromPalette = currentPalette;
       _toPalette = next;
       _paletteT = 0;
     }
-    wake();
   }
 
   /// Ensures the ticker is running (it stops itself when idle and paused).
@@ -204,7 +226,7 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
     final double dt =
         ((elapsed - _lastElapsed).inMicroseconds / 1e6).clamp(0.0, 0.1);
     _lastElapsed = elapsed;
-    if (motionEnabled) _time += dt * speed;
+    if (motionEnabled) _time += dt * speed * (_theme?.speed ?? 1);
     bool busy = false;
     if (_paletteT < 1) {
       _paletteT = math.min(1, _paletteT + dt / 0.6);
@@ -213,7 +235,13 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
     _touchStrength = approach(_touchStrength, _touchTarget, dt, 9);
     if ((_touchStrength - _touchTarget).abs() > 0.002) busy = true;
     if (tickValues(dt)) busy = true;
-    clock.tick();
+    _sinceRepaint += dt;
+    final double? maxFps = _theme?.maxFps;
+    final bool settling = !motionEnabled && !busy;
+    if (maxFps == null || settling || _sinceRepaint >= 1 / maxFps - 0.004) {
+      _sinceRepaint = 0;
+      clock.tick();
+    }
     if (!motionEnabled && !busy) _ticker.stop();
   }
 
@@ -228,8 +256,10 @@ abstract class ShaderWidgetState<T extends StatefulWidget> extends State<T>
   /// Wraps [child] so pointer events feed the shader (if [interactive]).
   Widget withTouch(Widget child) {
     if (!interactive) return child;
+    // Opaque so ancestors (e.g. a GestureDetector around this widget) see
+    // the hit: the non-opaque MouseRegion below always reports a miss.
     return Listener(
-      behavior: HitTestBehavior.translucent,
+      behavior: HitTestBehavior.opaque,
       onPointerDown: (PointerDownEvent e) {
         _pointerDown = true;
         _setTouch(e.localPosition, 1);
