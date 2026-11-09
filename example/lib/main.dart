@@ -232,11 +232,14 @@ class _GalleryPageState extends State<GalleryPage> {
       children: <Widget>[
         SiriOrb(size: 220, palette: _palette, amplitude: _amplitude),
         SiriWave(height: 100, palette: _palette, amplitude: _amplitude),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Simulated voice'),
-          value: _voice,
-          onChanged: (bool v) => setState(() => _voice = v),
+        Material(
+          color: Colors.transparent,
+          child: SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Simulated voice'),
+            value: _voice,
+            onChanged: (bool v) => setState(() => _voice = v),
+          ),
         ),
         Slider(
           value: _amplitude,
